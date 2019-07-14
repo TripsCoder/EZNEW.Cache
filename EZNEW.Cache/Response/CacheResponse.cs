@@ -39,9 +39,9 @@ namespace EZNEW.Cache.Response
         }
 
         /// <summary>
-        /// child response
+        /// inner response
         /// </summary>
-        public List<CacheResponse> ChildResponses
+        public List<CacheResponse> InnerResponses
         {
             get;
             protected set;
@@ -50,16 +50,25 @@ namespace EZNEW.Cache.Response
         #endregion
 
         /// <summary>
-        /// add child response
+        /// add inner response
         /// </summary>
-        /// <param name="childResponses"></param>
-        public void AddChildResponse(params CacheResponse[] childResponses)
+        /// <param name="innerResponses">inner responses</param>
+        public void AddInnerResponse(params CacheResponse[] innerResponses)
         {
-            ChildResponses = ChildResponses ?? new List<CacheResponse>();
-            if (childResponses!=null&&childResponses.Length>0)
+            InnerResponses = InnerResponses ?? new List<CacheResponse>();
+            if (innerResponses != null && innerResponses.Length > 0)
             {
-                ChildResponses.AddRange(childResponses);
+                InnerResponses.AddRange(innerResponses);
             }
+        }
+
+        /// <summary>
+        /// get empty response
+        /// </summary>
+        /// <returns></returns>
+        public static CacheResponse Empty()
+        {
+            return new CacheResponse();
         }
     }
 }

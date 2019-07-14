@@ -13,32 +13,34 @@ namespace EZNEW.Cache
     /// <typeparam name="T"></typeparam>
     public class CachePaging<T> : IEnumerable<T>
     {
-        private T[] _items = new T[0];//datas
+        private T[] items = new T[0];//datas
 
         #region Constructor
 
         /// <summary>
         /// Instance a paging object
         /// </summary>
-        /// <param name="pageIndex">page index</param>
+        /// <param name="page">page index</param>
         /// <param name="pageSize">page size</param>
         /// <param name="totalCount">total data</param>
         /// <param name="items">datas</param>
-        public CachePaging(long pageIndex, long pageSize, long totalCount, IEnumerable<T> items)
+        public CachePaging(long page, long pageSize, long totalCount, IEnumerable<T> items)
         {
-            if (items != null)
+            if (items == null)
             {
-                Page = pageIndex;
-                PageSize = pageSize;
-                TotalCount = totalCount;
-                _items = items.ToArray();
-                if (pageSize > 0)
+                return;
+            }
+
+            Page = page;
+            PageSize = pageSize;
+            TotalCount = totalCount;
+            this.items = items.ToArray();
+            if (pageSize > 0)
+            {
+                PageCount = totalCount / pageSize;
+                if (totalCount % pageSize > 0)
                 {
-                    PageCount = totalCount / pageSize;
-                    if (totalCount % pageSize > 0)
-                    {
-                        PageCount++;
-                    }
+                    PageCount++;
                 }
             }
         }
@@ -83,9 +85,9 @@ namespace EZNEW.Cache
 
         public IEnumerator<T> GetEnumerator()
         {
-            for (var i = 0; i < _items.Length; i++)
+            for (var i = 0; i < items.Length; i++)
             {
-                yield return _items[i];
+                yield return items[i];
             }
         }
 

@@ -11,7 +11,7 @@ namespace EZNEW.Cache.Response
         /// <summary>
         /// values
         /// </summary>
-        public List<KeyItem> Values
+        public List<CacheDataItem> Values
         {
             get;set;
         }

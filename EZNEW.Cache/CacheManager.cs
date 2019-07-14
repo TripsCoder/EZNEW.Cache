@@ -1,5 +1,8 @@
-﻿using EZNEW.Cache.Request;
+﻿using EZNEW.Cache.Command;
+using EZNEW.Cache.Command.Result;
 using EZNEW.Cache.Response;
+using EZNEW.Framework.Extension;
+using EZNEW.Framework.Serialize;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +16,8 @@ namespace EZNEW.Cache
     /// </summary>
     public static class CacheManager
     {
+        #region operation
+
         #region string
 
         #region StringSetRange
@@ -24,12 +29,11 @@ namespace EZNEW.Cache
         /// Non-existing keys are considered as empty strings, so this command will make
         /// sure it holds a string large enough to be able to set value at offset.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>string set range response</returns>
-        public static async Task<StringSetRangeResponse> StringSetRangeAsync(StringSetRangeRequest request)
+        public static async Task<CacheCommandResult<StringSetRangeResponse>> StringSetRangeAsync(StringSetRangeCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.StringSetRangeAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -42,12 +46,11 @@ namespace EZNEW.Cache
         /// does not exist, a new string value is created.The string is grown to make sure
         /// it can hold a bit at offset.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>string set bit response</returns>
-        public static async Task<StringSetBitResponse> StringSetBitAsync(StringSetBitRequest request)
+        public static async Task<CacheCommandResult<StringSetBitResponse>> StringSetBitAsync(StringSetBitCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.StringSetBitAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -58,12 +61,11 @@ namespace EZNEW.Cache
         /// Set key to hold the string value. If key already holds a value, it is overwritten,
         /// regardless of its type.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>string set response</returns>
-        public static async Task<StringSetResponse> StringSetAsync(StringSetRequest request)
+        public static async Task<CacheCommandResult<StringSetResponse>> StringSetAsync(StringSetCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.StringSetAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -73,12 +75,11 @@ namespace EZNEW.Cache
         /// <summary>
         /// Returns the length of the string value stored at key.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>string length response</returns>
-        public static async Task<StringLengthResponse> StringLengthAsync(StringLengthRequest request)
+        public static async Task<CacheCommandResult<StringLengthResponse>> StringLengthAsync(StringLengthCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.StringLengthAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -92,12 +93,11 @@ namespace EZNEW.Cache
         /// point regardless of the actual internal precision of the computation.
         /// </summary>
         /// <typeparam name="T">data type</typeparam>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>string increment response</returns>
-        public static async Task<StringIncrementResponse<T>> StringIncrementAsync<T>(StringIncrementRequest<T> request)
+        public static async Task<CacheCommandResult<Response.StringIncrementResponse<T>>> StringIncrementAsync<T>(Command.StringIncrementCommand<T> command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.StringIncrementAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -109,12 +109,11 @@ namespace EZNEW.Cache
         /// An error is returned if the value stored at key is not a string, because GET
         /// only handles string values.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>string get with expiry response</returns>
-        public static async Task<StringGetWithExpiryResponse> StringGetWithExpiryAsync(StringGetWithExpiryRequest request)
+        public static async Task<CacheCommandResult<StringGetWithExpiryResponse>> StringGetWithExpiryAsync(StringGetWithExpiryCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.StringGetWithExpiryAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -124,12 +123,11 @@ namespace EZNEW.Cache
         /// <summary>
         /// Atomically sets key to value and returns the old value stored at key.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>string get set response</returns>
-        public static async Task<StringGetSetResponse> StringGetSetAsync(StringGetSetRequest request)
+        public static async Task<CacheCommandResult<StringGetSetResponse>> StringGetSetAsync(StringGetSetCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.StringGetSetAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -142,12 +140,11 @@ namespace EZNEW.Cache
         /// provide an offset starting from the end of the string. So -1 means the last character,
         /// -2 the penultimate and so forth.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>string get range response</returns>
-        public static async Task<StringGetRangeResponse> StringGetRangeAsync(StringGetRangeRequest request)
+        public static async Task<CacheCommandResult<StringGetRangeResponse>> StringGetRangeAsync(StringGetRangeCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.StringGetRangeAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -159,12 +156,11 @@ namespace EZNEW.Cache
         /// is beyond the string length, the string is assumed to be a contiguous space with
         /// 0 bits
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>string get bit response</returns>
-        public static async Task<StringGetBitResponse> StringGetBitAsync(StringGetBitRequest request)
+        public static async Task<CacheCommandResult<StringGetBitResponse>> StringGetBitAsync(StringGetBitCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.StringGetBitAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -175,12 +171,115 @@ namespace EZNEW.Cache
         /// Returns the values of all specified keys. For every key that does not hold a
         /// string value or does not exist, the special value nil is returned.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>string get response</returns>
-        public static async Task<StringGetResponse> StringGetAsync(StringGetRequest request)
+        public static async Task<CacheCommandResult<StringGetResponse>> StringGetAsync(StringGetCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.StringGetAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// get value
+        /// </summary>
+        /// <param name="key">key</param>
+        /// <param name="cacheObject">cache object</param>
+        /// <returns></returns>
+        public static async Task<string> StringGetAsync(string key, CacheObject cacheObject = null)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                return string.Empty;
+            }
+            var values = await StringGetAsync(new List<string>() { key }, cacheObject).ConfigureAwait(false);
+            return values?.FirstOrDefault() ?? string.Empty;
+        }
+
+        /// <summary>
+        /// return value
+        /// </summary>
+        /// <param name="key">cache key</param>
+        /// <param name="cacheObject">cache object</param>
+        /// <returns></returns>
+        public static async Task<T> StringGetAsync<T>(string key, CacheObject cacheObject = null)
+        {
+            var cacheValue = await StringGetAsync(key, cacheObject).ConfigureAwait(false);
+            if (cacheValue.IsNullOrEmpty())
+            {
+                return default(T);
+            }
+            try
+            {
+                return JsonSerialize.JsonToObject<T>(cacheValue);
+            }
+            catch (Exception ex)
+            {
+                return default(T);
+            }
+        }
+
+        /// <summary>
+        /// return values
+        /// </summary>
+        /// <param name="keys">keys</param>
+        /// <param name="cacheObject">cache object</param>
+        /// <returns></returns>
+        public static async Task<List<string>> StringGetAsync(IEnumerable<string> keys, CacheObject cacheObject = null)
+        {
+            if (keys.IsNullOrEmpty())
+            {
+                return new List<string>(0);
+            }
+            var result = await StringGetAsync(new StringGetCommand()
+            {
+                CacheObject = cacheObject,
+                Keys = keys.ToList()
+            }).ConfigureAwait(false);
+            List<string> values = new List<string>();
+            if (result?.Responses?.Count > 0)
+            {
+                foreach (var response in result.Responses)
+                {
+                    if (response.Values.IsNullOrEmpty())
+                    {
+                        continue;
+                    }
+                    values = values.Union(response.Values.Select(c => c.Value?.ToString() ?? string.Empty)).ToList();
+                }
+            }
+            return values;
+        }
+
+        /// <summary>
+        /// return values
+        /// </summary>
+        /// <typeparam name="T">data type</typeparam>
+        /// <param name="keys">keys</param>
+        /// <param name="cacheObject">cache object</param>
+        /// <returns></returns>
+        public static async Task<List<T>> StringGetAsync<T>(IEnumerable<string> keys, CacheObject cacheObject = null)
+        {
+            var values = await StringGetAsync(keys, cacheObject).ConfigureAwait(false);
+            if (values.IsNullOrEmpty())
+            {
+                return new List<T>(0);
+            }
+            var datas = new List<T>(values.Count);
+            foreach (var val in values)
+            {
+                try
+                {
+                    var data = JsonSerialize.JsonToObject<T>(val);
+                    if(data==null)
+                    {
+                        continue;
+                    }
+                    datas.Add(data);
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+            return datas;
         }
 
         #endregion
@@ -194,12 +293,11 @@ namespace EZNEW.Cache
         /// as integer. This operation is limited to 64 bit signed integers.
         /// </summary>
         /// <typeparam name="T">data type</typeparam>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>string decrement response</returns>
-        public static async Task<StringDecrementResponse<T>> StringDecrementAsync<T>(StringDecrementRequest<T> request)
+        public static async Task<CacheCommandResult<StringDecrementResponse<T>>> StringDecrementAsync<T>(StringDecrementCommand<T> command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.StringDecrementAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -215,12 +313,11 @@ namespace EZNEW.Cache
         /// bytes starting from the end of the string, where -1 is the last byte, -2 is the
         /// penultimate, and so forth.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>string bit position response</returns>
-        public static async Task<StringBitPositionResponse> StringBitPositionAsync(StringBitPositionRequest request)
+        public static async Task<CacheCommandResult<StringBitPositionResponse>> StringBitPositionAsync(StringBitPositionCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.StringBitPositionAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -234,12 +331,11 @@ namespace EZNEW.Cache
         ///  be omitted in this case and only the first key will be considered. The result
         /// of the operation is always stored at destkey.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>string bit operation response</returns>
-        public static async Task<StringBitOperationResponse> StringBitOperationAsync(StringBitOperationRequest request)
+        public static async Task<CacheCommandResult<StringBitOperationResponse>> StringBitOperationAsync(StringBitOperationCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.StringBitOperationAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -254,12 +350,11 @@ namespace EZNEW.Cache
         /// in order to index bytes starting from the end of the string, where -1 is the
         /// last byte, -2 is the penultimate, and so forth.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>string bit count response</returns>
-        public static async Task<StringBitCountResponse> StringBitCountAsync(StringBitCountRequest request)
+        public static async Task<CacheCommandResult<StringBitCountResponse>> StringBitCountAsync(StringBitCountCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.StringBitCountAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -271,12 +366,11 @@ namespace EZNEW.Cache
         /// end of the string. If key does not exist it is created and set as an empty string,
         /// so APPEND will be similar to SET in this special case.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>string append response</returns>
-        public static async Task<StringAppendResponse> StringAppendAsync(StringAppendRequest request)
+        public static async Task<CacheCommandResult<StringAppendResponse>> StringAppendAsync(StringAppendCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.StringAppendAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -296,12 +390,11 @@ namespace EZNEW.Cache
         /// offsets from the end of the list, where -1 is the last element of the list, -2
         /// the penultimate element and so on.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>list trim response</returns>
-        public static async Task<ListTrimResponse> ListTrimAsync(ListTrimRequest request)
+        public static async Task<CacheCommandResult<ListTrimResponse>> ListTrimAsync(ListTrimCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.ListTrimAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -312,12 +405,11 @@ namespace EZNEW.Cache
         /// Sets the list element at index to value. For more information on the index argument,
         ///  see ListGetByIndex. An error is returned for out of range indexes.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>list set by index response</returns>
-        public static async Task<ListSetByIndexResponse> ListSetByIndexAsync(ListSetByIndexRequest request)
+        public static async Task<CacheCommandResult<ListSetByIndexResponse>> ListSetByIndexAsync(ListSetByIndexCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.ListSetByIndexAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -332,12 +424,11 @@ namespace EZNEW.Cache
         /// b c will result into a list containing a as first element, b as second element
         /// and c as third element.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>list right push</returns>
-        public static async Task<ListRightPushResponse> ListRightPushAsync(ListRightPushRequest request)
+        public static async Task<CacheCommandResult<ListRightPushResponse>> ListRightPushAsync(ListRightPushCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.ListRightPushAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -349,12 +440,11 @@ namespace EZNEW.Cache
         /// source, and pushes the element at the first element (head) of the list stored
         /// at destination.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>list right pop left response</returns>
-        public static async Task<ListRightPopLeftPushResponse> ListRightPopLeftPushAsync(ListRightPopLeftPushRequest request)
+        public static async Task<CacheCommandResult<ListRightPopLeftPushResponse>> ListRightPopLeftPushAsync(ListRightPopLeftPushCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.ListRightPopLeftPushAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -364,12 +454,11 @@ namespace EZNEW.Cache
         /// <summary>
         /// Removes and returns the last element of the list stored at key.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>list right pop response</returns>
-        public static async Task<ListRightPopResponse> ListRightPopAsync(ListRightPopRequest request)
+        public static async Task<CacheCommandResult<ListRightPopResponse>> ListRightPopAsync(ListRightPopCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.ListRightPopAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -383,12 +472,11 @@ namespace EZNEW.Cache
         /// Remove elements equal to value moving from tail to head. count = 0: Remove all
         /// elements equal to value.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>list remove response</returns>
-        public static async Task<ListRemoveResponse> ListRemoveAsync(ListRemoveRequest request)
+        public static async Task<CacheCommandResult<ListRemoveResponse>> ListRemoveAsync(ListRemoveCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.ListRemoveAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -404,12 +492,11 @@ namespace EZNEW.Cache
         /// if you have a list of numbers from 0 to 100, LRANGE list 0 10 will return 11
         /// elements, that is, the rightmost item is included.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>list range response</returns>
-        public static async Task<ListRangeResponse> ListRangeAsync(ListRangeRequest request)
+        public static async Task<CacheCommandResult<ListRangeResponse>> ListRangeAsync(ListRangeCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.ListRangeAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -420,12 +507,11 @@ namespace EZNEW.Cache
         /// Returns the length of the list stored at key. If key does not exist, it is interpreted
         ///  as an empty list and 0 is returned.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>list length response</returns>
-        public static async Task<ListLengthResponse> ListLengthAsync(ListLengthRequest request)
+        public static async Task<CacheCommandResult<ListLengthResponse>> ListLengthAsync(ListLengthCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.ListLengthAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -436,12 +522,11 @@ namespace EZNEW.Cache
         /// Insert the specified value at the head of the list stored at key. If key does
         ///  not exist, it is created as empty list before performing the push operations.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>list left push response</returns>
-        public static async Task<ListLeftPushResponse> ListLeftPushAsync(ListLeftPushRequest request)
+        public static async Task<CacheCommandResult<ListLeftPushResponse>> ListLeftPushAsync(ListLeftPushCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.ListLeftPushAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -451,12 +536,11 @@ namespace EZNEW.Cache
         /// <summary>
         /// Removes and returns the first element of the list stored at key.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>list left pop response</returns>
-        public static async Task<ListLeftPopResponse> ListLeftPopAsync(ListLeftPopRequest request)
+        public static async Task<CacheCommandResult<ListLeftPopResponse>> ListLeftPopAsync(ListLeftPopCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.ListLeftPopAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -468,12 +552,11 @@ namespace EZNEW.Cache
         /// value pivot. When key does not exist, it is considered an empty list and no operation
         /// is performed.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>list insert begore response</returns>
-        public static async Task<ListInsertBeforeResponse> ListInsertBeforeAsync(ListInsertBeforeRequest request)
+        public static async Task<CacheCommandResult<ListInsertBeforeResponse>> ListInsertBeforeAsync(ListInsertBeforeCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.ListInsertBeforeAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -485,12 +568,11 @@ namespace EZNEW.Cache
         /// value pivot. When key does not exist, it is considered an empty list and no operation
         /// is performed.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>list insert after response</returns>
-        public static async Task<ListInsertAfterResponse> ListInsertAfterAsync(ListInsertAfterRequest request)
+        public static async Task<CacheCommandResult<ListInsertAfterResponse>> ListInsertAfterAsync(ListInsertAfterCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.ListInsertAfterAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -503,12 +585,11 @@ namespace EZNEW.Cache
         /// can be used to designate elements starting at the tail of the list. Here, -1
         /// means the last element, -2 means the penultimate and so forth.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>list get by index response</returns>
-        public static async Task<ListGetByIndexResponse> ListGetByIndexAsync(ListGetByIndexRequest request)
+        public static async Task<CacheCommandResult<ListGetByIndexResponse>> ListGetByIndexAsync(ListGetByIndexCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.ListGetByIndexAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -522,12 +603,11 @@ namespace EZNEW.Cache
         /// <summary>
         /// Returns all values in the hash stored at key.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>hash values response</returns>
-        public static async Task<HashValuesResponse> HashValuesAsync(HashValuesRequest request)
+        public static async Task<CacheCommandResult<HashValuesResponse>> HashValuesAsync(HashValuesCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.HashValuesAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -538,12 +618,11 @@ namespace EZNEW.Cache
         /// Sets field in the hash stored at key to value. If key does not exist, a new key
         ///  holding a hash is created. If field already exists in the hash, it is overwritten.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>hash set response</returns>
-        public static async Task<HashSetResponse> HashSetAsync(HashSetRequest request)
+        public static async Task<CacheCommandResult<HashSetResponse>> HashSetAsync(HashSetCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.HashSetAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -553,12 +632,11 @@ namespace EZNEW.Cache
         /// <summary>
         /// Returns the number of fields contained in the hash stored at key.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>hash length response</returns>
-        public static async Task<HashLengthResponse> HashLengthAsync(HashLengthRequest request)
+        public static async Task<CacheCommandResult<HashLengthResponse>> HashLengthAsync(HashLengthCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.HashLengthAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -568,12 +646,11 @@ namespace EZNEW.Cache
         /// <summary>
         /// Returns all field names in the hash stored at key.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>hash keys response</returns>
-        public static async Task<HashKeysResponse> HashKeysAsync(HashKeysRequest request)
+        public static async Task<CacheCommandResult<HashKeysResponse>> HashKeysAsync(HashKeysCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.HashKeysAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -587,12 +664,11 @@ namespace EZNEW.Cache
         /// to 0 before the operation is performed.
         /// </summary>
         /// <typeparam name="T">data type</typeparam>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>hash increment response</returns>
-        public static async Task<HashIncrementResponse<T>> HashIncrementAsync<T>(HashIncrementRequest<T> request)
+        public static async Task<CacheCommandResult<HashIncrementResponse<T>>> HashIncrementAsync<T>(HashIncrementCommand<T> command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.HashIncrementAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -602,12 +678,11 @@ namespace EZNEW.Cache
         /// <summary>
         /// Returns the value associated with field in the hash stored at key.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>hash get response</returns>
-        public static async Task<HashGetResponse> HashGetAsync(HashGetRequest request)
+        public static async Task<CacheCommandResult<HashGetResponse>> HashGetAsync(HashGetCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.HashGetAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -617,12 +692,11 @@ namespace EZNEW.Cache
         /// <summary>
         /// Returns all fields and values of the hash stored at key.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>hash get all response</returns>
-        public static async Task<HashGetAllResponse> HashGetAllAsync(HashGetAllRequest request)
+        public static async Task<CacheCommandResult<HashGetAllResponse>> HashGetAllAsync(HashGetAllCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.HashGetAllAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -632,12 +706,11 @@ namespace EZNEW.Cache
         /// <summary>
         /// Returns if field is an existing field in the hash stored at key.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>hash exists response</returns>
-        public static async Task<HashExistsResponse> HashExistsAsync(HashExistsRequest request)
+        public static async Task<CacheCommandResult<HashExistsResponse>> HashExistsAsync(HashExistsCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.HashExistsAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -648,12 +721,11 @@ namespace EZNEW.Cache
         /// Removes the specified fields from the hash stored at key. Non-existing fields
         /// are ignored. Non-existing keys are treated as empty hashes and this command returns 0
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>hash delete response</returns>
-        public static async Task<HashDeleteResponse> HashDeleteAsync(HashDeleteRequest request)
+        public static async Task<CacheCommandResult<HashDeleteResponse>> HashDeleteAsync(HashDeleteCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.HashDeleteAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -666,12 +738,11 @@ namespace EZNEW.Cache
         ///  set to 0 before performing the operation.
         /// </summary>
         /// <typeparam name="T">data type</typeparam>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>hash decrement response</returns>
-        public static async Task<HashDecrementResponse<T>> HashDecrementAsync<T>(HashDecrementRequest<T> request)
+        public static async Task<CacheCommandResult<HashDecrementResponse<T>>> HashDecrementAsync<T>(HashDecrementCommand<T> command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.HashDecrementAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -681,12 +752,11 @@ namespace EZNEW.Cache
         /// <summary>
         /// The HSCAN command is used to incrementally iterate over a hash
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>hash scan response</returns>
-        public static async Task<HashScanResponse> HashScanAsync(HashScanRequest request)
+        public static async Task<CacheCommandResult<HashScanResponse>> HashScanAsync(HashScanCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.HashScanAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -701,12 +771,11 @@ namespace EZNEW.Cache
         /// Remove the specified member from the set stored at key. Specified members that
         /// are not a member of this set are ignored.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>set remove response</returns>
-        public static async Task<SetRemoveResponse> SetRemoveAsync(SetRemoveRequest request)
+        public static async Task<CacheCommandResult<SetRemoveResponse>> SetRemoveAsync(SetRemoveCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SetRemoveAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -719,12 +788,11 @@ namespace EZNEW.Cache
         /// same element multiple times. In this case the numer of returned elements is the
         /// absolute value of the specified count.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>set random members response</returns>
-        public static async Task<SetRandomMembersResponse> SetRandomMembersAsync(SetRandomMembersRequest request)
+        public static async Task<CacheCommandResult<SetRandomMembersResponse>> SetRandomMembersAsync(SetRandomMembersCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SetRandomMembersAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -734,12 +802,11 @@ namespace EZNEW.Cache
         /// <summary>
         /// Return a random element from the set value stored at key.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>set random member</returns>
-        public static async Task<SetRandomMemberResponse> SetRandomMemberAsync(SetRandomMemberRequest request)
+        public static async Task<CacheCommandResult<SetRandomMemberResponse>> SetRandomMemberAsync(SetRandomMemberCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SetRandomMemberAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -749,12 +816,11 @@ namespace EZNEW.Cache
         /// <summary>
         /// Removes and returns a random element from the set value stored at key.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>set pop response</returns>
-        public static async Task<SetPopResponse> SetPopAsync(SetPopRequest request)
+        public static async Task<CacheCommandResult<SetPopResponse>> SetPopAsync(SetPopCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SetPopAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -767,12 +833,11 @@ namespace EZNEW.Cache
         /// or destination for other clients. When the specified element already exists in
         /// the destination set, it is only removed from the source set.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>set move response</returns>
-        public static async Task<SetMoveResponse> SetMoveAsync(SetMoveRequest request)
+        public static async Task<CacheCommandResult<SetMoveResponse>> SetMoveAsync(SetMoveCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SetMoveAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -782,12 +847,11 @@ namespace EZNEW.Cache
         /// <summary>
         /// Returns all the members of the set value stored at key.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>set members response</returns>
-        public static async Task<SetMembersResponse> SetMembersAsync(SetMembersRequest request)
+        public static async Task<CacheCommandResult<SetMembersResponse>> SetMembersAsync(SetMembersCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SetMembersAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -797,12 +861,11 @@ namespace EZNEW.Cache
         /// <summary>
         /// Returns the set cardinality (number of elements) of the set stored at key.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>set length response</returns>
-        public static async Task<SetLengthResponse> SetLengthAsync(SetLengthRequest request)
+        public static async Task<CacheCommandResult<SetLengthResponse>> SetLengthAsync(SetLengthCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SetLengthAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -812,12 +875,11 @@ namespace EZNEW.Cache
         /// <summary>
         /// Returns if member is a member of the set stored at key.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>set contains response</returns>
-        public static async Task<SetContainsResponse> SetContainsAsync(SetContainsRequest request)
+        public static async Task<CacheCommandResult<SetContainsResponse>> SetContainsAsync(SetContainsCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SetContainsAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -828,12 +890,11 @@ namespace EZNEW.Cache
         /// Returns the members of the set resulting from the specified operation against
         /// the given sets.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>set combine response</returns>
-        public static async Task<SetCombineResponse> SetCombineAsync(SetCombineRequest request)
+        public static async Task<CacheCommandResult<SetCombineResponse>> SetCombineAsync(SetCombineCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SetCombineAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -844,12 +905,11 @@ namespace EZNEW.Cache
         /// This command is equal to SetCombine, but instead of returning the resulting set,
         ///  it is stored in destination. If destination already exists, it is overwritten.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>set combine and store response</returns>
-        public static async Task<SetCombineAndStoreResponse> SetCombineAndStoreAsync(SetCombineAndStoreRequest request)
+        public static async Task<CacheCommandResult<SetCombineAndStoreResponse>> SetCombineAndStoreAsync(SetCombineAndStoreCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SetCombineAndStoreAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -861,12 +921,11 @@ namespace EZNEW.Cache
         /// already a member of this set are ignored. If key does not exist, a new set is
         /// created before adding the specified members.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>set add response</returns>
-        public static async Task<SetAddResponse> SetAddAsync(SetAddRequest request)
+        public static async Task<CacheCommandResult<SetAddResponse>> SetAddAsync(SetAddCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SetAddAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -881,12 +940,11 @@ namespace EZNEW.Cache
         /// Returns the score of member in the sorted set at key; If member does not exist
         /// in the sorted set, or key does not exist, nil is returned.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>sorted set score response</returns>
-        public static async Task<SortedSetScoreResponse> SortedSetScoreAsync(SortedSetScoreRequest request)
+        public static async Task<CacheCommandResult<SortedSetScoreResponse>> SortedSetScoreAsync(SortedSetScoreCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SortedSetScoreAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -898,12 +956,11 @@ namespace EZNEW.Cache
         /// to force lexicographical ordering, this command removes all elements in the sorted
         /// set stored at key between the lexicographical range specified by min and max.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>sorted set remove range by value response</returns>
-        public static async Task<SortedSetRemoveRangeByValueResponse> SortedSetRemoveRangeByValueAsync(SortedSetRemoveRangeByValueRequest request)
+        public static async Task<CacheCommandResult<SortedSetRemoveRangeByValueResponse>> SortedSetRemoveRangeByValueAsync(SortedSetRemoveRangeByValueCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SortedSetRemoveRangeByValueAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -914,12 +971,11 @@ namespace EZNEW.Cache
         /// Removes all elements in the sorted set stored at key with a score between min
         ///  and max (inclusive by default).
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>sorted set remove range by score response</returns>
-        public static async Task<SortedSetRemoveRangeByScoreResponse> SortedSetRemoveRangeByScoreAsync(SortedSetRemoveRangeByScoreRequest request)
+        public static async Task<CacheCommandResult<SortedSetRemoveRangeByScoreResponse>> SortedSetRemoveRangeByScoreAsync(SortedSetRemoveRangeByScoreCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SortedSetRemoveRangeByScoreAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -934,12 +990,11 @@ namespace EZNEW.Cache
         /// element with the highest score, -2 the element with the second highest score
         /// and so forth.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>sorted set remove range by rank response</returns>
-        public static async Task<SortedSetRemoveRangeByRankResponse> SortedSetRemoveRangeByRankAsync(SortedSetRemoveRangeByRankRequest request)
+        public static async Task<CacheCommandResult<SortedSetRemoveRangeByRankResponse>> SortedSetRemoveRangeByRankAsync(SortedSetRemoveRangeByRankCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SortedSetRemoveRangeByRankAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -950,12 +1005,11 @@ namespace EZNEW.Cache
         /// Removes the specified members from the sorted set stored at key. Non existing
         /// members are ignored.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>sorted set remove response</returns>
-        public static async Task<SortedSetRemoveResponse> SortedSetRemoveAsync(SortedSetRemoveRequest request)
+        public static async Task<CacheCommandResult<SortedSetRemoveResponse>> SortedSetRemoveAsync(SortedSetRemoveCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SortedSetRemoveAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -967,12 +1021,11 @@ namespace EZNEW.Cache
         /// scores ordered from low to high. The rank (or index) is 0-based, which means
         /// that the member with the lowest score has rank 0.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>sorted set rank response</returns>
-        public static async Task<SortedSetRankResponse> SortedSetRankAsync(SortedSetRankRequest request)
+        public static async Task<CacheCommandResult<SortedSetRankResponse>> SortedSetRankAsync(SortedSetRankCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SortedSetRankAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -984,12 +1037,11 @@ namespace EZNEW.Cache
         /// to force lexicographical ordering, this command returns all the elements in the
         /// sorted set at key with a value between min and max.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>sorted set range by value response</returns>
-        public static async Task<SortedSetRangeByValueResponse> SortedSetRangeByValueAsync(SortedSetRangeByValueRequest request)
+        public static async Task<CacheCommandResult<SortedSetRangeByValueResponse>> SortedSetRangeByValueAsync(SortedSetRangeByValueCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SortedSetRangeByValueAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1003,12 +1055,11 @@ namespace EZNEW.Cache
         /// used to specify the min and max range for score values. Similar to other range
         /// methods the values are inclusive.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>sorted set range by score with scores response</returns>
-        public static async Task<SortedSetRangeByScoreWithScoresResponse> SortedSetRangeByScoreWithScoresAsync(SortedSetRangeByScoreWithScoresRequest request)
+        public static async Task<CacheCommandResult<SortedSetRangeByScoreWithScoresResponse>> SortedSetRangeByScoreWithScoresAsync(SortedSetRangeByScoreWithScoresCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SortedSetRangeByScoreWithScoresAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1022,12 +1073,11 @@ namespace EZNEW.Cache
         /// used to specify the min and max range for score values. Similar to other range
         /// methods the values are inclusive.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>sorted set range by score response</returns>
-        public static async Task<SortedSetRangeByScoreResponse> SortedSetRangeByScoreAsync(SortedSetRangeByScoreRequest request)
+        public static async Task<CacheCommandResult<SortedSetRangeByScoreResponse>> SortedSetRangeByScoreAsync(SortedSetRangeByScoreCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SortedSetRangeByScoreAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1043,12 +1093,11 @@ namespace EZNEW.Cache
         /// sorted set, with -1 being the last element of the sorted set, -2 the penultimate
         /// element and so on.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>sorted set range by rank with scores response</returns>
-        public static async Task<SortedSetRangeByRankWithScoresResponse> SortedSetRangeByRankWithScoresAsync(SortedSetRangeByRankWithScoresRequest request)
+        public static async Task<CacheCommandResult<SortedSetRangeByRankWithScoresResponse>> SortedSetRangeByRankWithScoresAsync(SortedSetRangeByRankWithScoresCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SortedSetRangeByRankWithScoresAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1064,12 +1113,11 @@ namespace EZNEW.Cache
         /// sorted set, with -1 being the last element of the sorted set, -2 the penultimate
         /// element and so on.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>sorted set range by rank response</returns>
-        public static async Task<SortedSetRangeByRankResponse> SortedSetRangeByRankAsync(SortedSetRangeByRankRequest request)
+        public static async Task<CacheCommandResult<SortedSetRangeByRankResponse>> SortedSetRangeByRankAsync(SortedSetRangeByRankCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SortedSetRangeByRankAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1081,12 +1129,11 @@ namespace EZNEW.Cache
         /// to force lexicographical ordering, this command returns the number of elements
         /// in the sorted set at key with a value between min and max.
         /// </summary>
-        /// <param name="request">response</param>
+        /// <param name="command">response</param>
         /// <returns>sorted set lenght by value response</returns>
-        public static async Task<SortedSetLengthByValueResponse> SortedSetLengthByValueAsync(SortedSetLengthByValueRequest request)
+        public static async Task<CacheCommandResult<SortedSetLengthByValueResponse>> SortedSetLengthByValueAsync(SortedSetLengthByValueCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SortedSetLengthByValueAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1097,12 +1144,11 @@ namespace EZNEW.Cache
         /// Returns the sorted set cardinality (number of elements) of the sorted set stored
         /// at key.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>sorted set length response</returns>
-        public static async Task<SortedSetLengthResponse> SortedSetLengthAsync(SortedSetLengthRequest request)
+        public static async Task<CacheCommandResult<SortedSetLengthResponse>> SortedSetLengthAsync(SortedSetLengthCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SortedSetLengthAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1114,12 +1160,11 @@ namespace EZNEW.Cache
         /// If member does not exist in the sorted set, it is added with increment as its
         /// score (as if its previous score was 0.0).
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>sorted set increment response</returns>
-        public static async Task<SortedSetIncrementResponse> SortedSetIncrementAsync(SortedSetIncrementRequest request)
+        public static async Task<CacheCommandResult<SortedSetIncrementResponse>> SortedSetIncrementAsync(SortedSetIncrementCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SortedSetIncrementAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1131,12 +1176,11 @@ namespace EZNEW.Cache
         /// If member does not exist in the sorted set, it is added with -decrement as its
         /// score (as if its previous score was 0.0).
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>sorted set decrement response</returns>
-        public static async Task<SortedSetDecrementResponse> SortedSetDecrementAsync(SortedSetDecrementRequest request)
+        public static async Task<CacheCommandResult<SortedSetDecrementResponse>> SortedSetDecrementAsync(SortedSetDecrementCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SortedSetDecrementAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1148,12 +1192,11 @@ namespace EZNEW.Cache
         /// weights), and stores the result in destination, optionally performing a specific
         /// aggregation (defaults to sum)
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>sorted set combine and store response</returns>
-        public static async Task<SortedSetCombineAndStoreResponse> SortedSetCombineAndStoreAsync(SortedSetCombineAndStoreRequest request)
+        public static async Task<CacheCommandResult<SortedSetCombineAndStoreResponse>> SortedSetCombineAndStoreAsync(SortedSetCombineAndStoreCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SortedSetCombineAndStoreAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1166,12 +1209,11 @@ namespace EZNEW.Cache
         /// is updated and the element reinserted at the right position to ensure the correct
         /// ordering.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>sorted set add response</returns>
-        public static async Task<SortedSetAddResponse> SortedSetAddAsync(SortedSetAddRequest request)
+        public static async Task<CacheCommandResult<SortedSetAddResponse>> SortedSetAddAsync(SortedSetAddCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SortedSetAddAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1192,12 +1234,11 @@ namespace EZNEW.Cache
         /// for examples is recommended. When used in hashes, by and get can be used to specify
         /// fields using -> notation (again, refer to redis documentation).
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>sort response</returns>
-        public static async Task<SortResponse> SortAsync(SortRequest request)
+        public static async Task<CacheCommandResult<SortResponse>> SortAsync(SortCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SortAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1214,12 +1255,11 @@ namespace EZNEW.Cache
         /// for examples is recommended. When used in hashes, by and get can be used to specify
         /// fields using -> notation (again, refer to redis documentation).
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>sort and store response</returns>
-        public static async Task<SortAndStoreResponse> SortAndStoreAsync(SortAndStoreRequest request)
+        public static async Task<CacheCommandResult<SortAndStoreResponse>> SortAndStoreAsync(SortAndStoreCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SortAndStoreAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1234,12 +1274,11 @@ namespace EZNEW.Cache
         /// Returns the string representation of the type of the value stored at key. The
         /// different types that can be returned are: string, list, set, zset and hash.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>key type response</returns>
-        public static async Task<KeyTypeResponse> KeyTypeAsync(KeyTypeRequest request)
+        public static async Task<CacheCommandResult<KeyTypeResponse>> KeyTypeAsync(KeyTypeCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.KeyTypeAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1251,12 +1290,11 @@ namespace EZNEW.Cache
         /// capability allows a Redis client to check how many seconds a given key will continue
         /// to be part of the dataset.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>key time to live response</returns>
-        public static async Task<KeyTimeToLiveResponse> KeyTimeToLiveAsync(KeyTimeToLiveRequest request)
+        public static async Task<CacheCommandResult<KeyTimeToLiveResponse>> KeyTimeToLiveAsync(KeyTimeToLiveCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.KeyTimeToLiveAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1268,12 +1306,11 @@ namespace EZNEW.Cache
         /// serialized value (obtained via DUMP). If ttl is 0 the key is created without
         /// any expire, otherwise the specified expire time(in milliseconds) is set.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>key restore response</returns>
-        public static async Task<KeyRestoreResponse> KeyRestoreAsync(KeyRestoreRequest request)
+        public static async Task<CacheCommandResult<KeyRestoreResponse>> KeyRestoreAsync(KeyRestoreCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.KeyRestoreAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1284,12 +1321,11 @@ namespace EZNEW.Cache
         /// Renames key to newkey. It returns an error when the source and destination names
         /// are the same, or when key does not exist.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>key rename response</returns>
-        public static async Task<KeyRenameResponse> KeyRenameAsync(KeyRenameRequest request)
+        public static async Task<CacheCommandResult<KeyRenameResponse>> KeyRenameAsync(KeyRenameCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.KeyRenameAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1299,12 +1335,11 @@ namespace EZNEW.Cache
         /// <summary>
         /// Return a random key from the currently selected database.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>key random response</returns>
-        public static async Task<KeyRandomResponse> KeyRandomAsync(KeyRandomRequest request)
+        public static async Task<CacheCommandResult<KeyRandomResponse>> KeyRandomAsync(KeyRandomCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.KeyRandomAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1315,12 +1350,11 @@ namespace EZNEW.Cache
         /// Remove the existing timeout on key, turning the key from volatile (a key with
         /// an expire set) to persistent (a key that will never expire as no timeout is associated).
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>key persist response</returns>
-        public static async Task<KeyPersistResponse> KeyPersistAsync(KeyPersistRequest request)
+        public static async Task<CacheCommandResult<KeyPersistResponse>> KeyPersistAsync(KeyPersistCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.KeyPersistAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1333,12 +1367,11 @@ namespace EZNEW.Cache
         /// exist in the source database, it does nothing. It is possible to use MOVE as
         /// a locking primitive because of this.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>key move response</returns>
-        public static async Task<KeyMoveResponse> KeyMoveAsync(KeyMoveRequest request)
+        public static async Task<CacheCommandResult<KeyMoveResponse>> KeyMoveAsync(KeyMoveCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.KeyMoveAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1350,12 +1383,11 @@ namespace EZNEW.Cache
         /// instance. On success the key is deleted from the original instance by default,
         /// and is guaranteed to exist in the target instance.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>key migrate response</returns>
-        public static async Task<KeyMigrateResponse> KeyMigrateAsync(KeyMigrateRequest request)
+        public static async Task<CacheCommandResult<KeyMigrateResponse>> KeyMigrateAsync(KeyMigrateCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.KeyMigrateAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1367,12 +1399,11 @@ namespace EZNEW.Cache
         /// be deleted. A key with an associated timeout is said to be volatile in Redis
         /// terminology.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>key expire response</returns>
-        public static async Task<KeyExpireResponse> KeyExpireAsync(KeyExpireRequest request)
+        public static async Task<CacheCommandResult<KeyExpireResponse>> KeyExpireAsync(KeyExpireCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.KeyExpireAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion;
@@ -1384,12 +1415,11 @@ namespace EZNEW.Cache
         /// the user. The returned value can be synthesized back into a Redis key using the
         /// RESTORE command.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>key dump response</returns>
-        public static async Task<KeyDumpResponse> KeyDumpAsync(KeyDumpRequest request)
+        public static async Task<CacheCommandResult<KeyDumpResponse>> KeyDumpAsync(KeyDumpCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.KeyDumpAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
@@ -1399,191 +1429,213 @@ namespace EZNEW.Cache
         /// <summary>
         /// Removes the specified keys. A key is ignored if it does not exist.
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <returns>key delete response</returns>
-        public static async Task<KeyDeleteResponse> KeyDeleteAsync(KeyDeleteRequest request)
+        public static async Task<CacheCommandResult<KeyDeleteResponse>> KeyDeleteAsync(KeyDeleteCommand command)
         {
-            var cacheEngine = GetCacheEngine(request);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.KeyDeleteAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
 
-        #endregion
-
-        #region server command
-
-        #region get all data base
+        #region Get Keys
 
         /// <summary>
-        /// get all database
+        /// Removes the specified keys. A key is ignored if it does not exist.
         /// </summary>
-        /// <param name="request">request</param>
-        /// <returns>get all database response</returns>
-        public static async Task<GetAllDataBaseResponse> GetAllDataBaseAsync(GetAllDataBaseRequest request)
+        /// <param name="command">command</param>
+        /// <returns>key delete response</returns>
+        public static async Task<CacheCommandResult<GetKeysResponse>> GetKeysAsync(GetKeysCommand command)
         {
-            var cacheEngine = GetCacheEngine(request,false);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.GetAllDataBaseAsync).ConfigureAwait(false);
-        }
-
-        #endregion
-
-        #region query keys
-
-        /// <summary>
-        /// query keys
-        /// </summary>
-        /// <param name="request">request</param>
-        /// <returns>get keys response</returns>
-        public static async Task<GetKeysResponse> GetKeysAsync(GetKeysRequest request)
-        {
-            var cacheEngine = GetCacheEngine(request, false);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.GetKeysAsync).ConfigureAwait(false);
-        }
-
-        #endregion
-
-        #region clear data
-
-        /// <summary>
-        /// clear database data
-        /// </summary>
-        /// <param name="request">request</param>
-        /// <returns>clear data response</returns>
-        public static async Task<ClearDataResponse> ClearDataAsync(ClearDataRequest request)
-        {
-            var cacheEngine = GetCacheEngine(request, false);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.ClearDataAsync).ConfigureAwait(false);
-        }
-
-        #endregion
-
-        #region get cache item detail
-
-        /// <summary>
-        /// get cache item detail
-        /// </summary>
-        /// <param name="request">request</param>
-        /// <returns>get key detail response</returns>
-        public static async Task<GetKeyDetailResponse> GetKeyDetailAsync(GetKeyDetailRequest request)
-        {
-            var cacheEngine = GetCacheEngine(request, false);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.GetKeyDetailAsync).ConfigureAwait(false);
-        }
-
-        #endregion
-
-        #region get server config
-
-        /// <summary>
-        /// get server config
-        /// </summary>
-        /// <param name="request">request</param>
-        /// <returns>get server config response</returns>
-        public static async Task<GetServerConfigResponse> GetServerConfigAsync(GetServerConfigRequest request)
-        {
-            var cacheEngine = GetCacheEngine(request, false);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.GetServerConfigAsync).ConfigureAwait(false);
-        }
-
-        #endregion
-
-        #region save server config
-
-        /// <summary>
-        /// save server config
-        /// </summary>
-        /// <param name="request">request</param>
-        /// <returns>save server config response</returns>
-        public static async Task<SaveServerConfigResponse> SaveServerConfigAsync(SaveServerConfigRequest request)
-        {
-            var cacheEngine = GetCacheEngine(request, false);
-            return await ExecuteCacheOperationAsync(request, cacheEngine.SaveServerConfigAsync).ConfigureAwait(false);
+            return await ExecuteCommandAsync(command).ConfigureAwait(false);
         }
 
         #endregion
 
         #endregion
 
-        #region get cache engine
-
-        /// <summary>
-        /// get cache servers
-        /// </summary>
-        /// <param name="request">request</param>
-        /// <returns></returns>
-        static ICacheEngine GetCacheEngine(CacheRequest request, bool reInitServer = true)
-        {
-            if (request == null)
-            {
-                return null;
-            }
-            bool verifyResult = true;
-            if (CacheConfig.VerifyCacheOptionMethod != null)
-            {
-                verifyResult = CacheConfig.VerifyCacheOptionMethod(request);
-            }
-            if (!verifyResult)
-            {
-                return null;
-            }
-            CacheServer server = request.Server;
-            if (reInitServer)
-            {
-                server = CacheConfig.GetCacheServersMethod?.Invoke(request);
-            }
-            if (server == null)
-            {
-                throw new Exception("haven't configured any server");
-            }
-            if (!CacheConfig.CacheEngines.ContainsKey(server.ServerType) || CacheConfig.CacheEngines[server.ServerType] == null)
-            {
-                throw new Exception(string.Format("haven't coinfigured any cache operation engine for server type:{0}", server.ServerType.ToString()));
-            }
-            request.Server = server;
-            return CacheConfig.CacheEngines[server.ServerType];
-        }
-
-        #endregion
-
-        #region VerifyServerEngine
-
-        /// <summary>
-        /// verify cache engines and cache server
-        /// </summary>
-        /// <param name="serverTypes">server types</param>
-        static void VerifyServerEngine(IEnumerable<CacheServerType> serverTypes)
-        {
-            if (serverTypes == null)
-            {
-                return;
-            }
-            if (CacheConfig.CacheEngines == null || CacheConfig.CacheEngines.Count <= 0)
-            {
-                throw new Exception("not config any ICacheEngine");
-            }
-            foreach (var serverType in serverTypes)
-            {
-                if (!CacheConfig.CacheEngines.ContainsKey(serverType) || CacheConfig.CacheEngines[serverType] == null)
-                {
-                    throw new Exception(string.Format("ServerType:{0} not special execute engine", serverType.ToString()));
-                }
-            }
-        }
-
-        #endregion
-
-        #region Execute Cache Operation
+        #region execute command
 
         /// <summary>
         /// Execute Cache Operation
         /// </summary>
-        /// <param name="request">request</param>
+        /// <param name="command">command</param>
         /// <param name="handler">handler</param>
         /// <returns></returns>
-        static async Task<TOut> ExecuteCacheOperationAsync<TIn, TOut>(TIn request, Func<TIn, Task<TOut>> handler) where TIn : CacheRequest where TOut : CacheResponse
+        static async Task<CacheCommandResult<TR>> ExecuteCommandAsync<TR>(CacheCommand<TR> cacheCommand) where TR : CacheResponse
         {
-            return await handler(request).ConfigureAwait(false);
+            if (cacheCommand == null)
+            {
+                return CacheCommandResult<TR>.EmptyResult();
+            }
+            return await cacheCommand.ExecuteAsync().ConfigureAwait(false) ?? CacheCommandResult<TR>.EmptyResult();
+        }
+
+        #endregion
+
+        #endregion
+
+        #region server
+
+        public static class Server
+        {
+            #region get all data base
+
+            /// <summary>
+            /// get all database
+            /// </summary>
+            /// <param name="server">server</param>
+            /// <param name="command">command</param>
+            /// <returns>get all database response</returns>
+            public static async Task<CacheCommandResult<GetAllDataBaseResponse>> GetAllDataBaseAsync(CacheServer server, GetAllDataBaseCommand command)
+            {
+                return await command.ExecuteAsync(server).ConfigureAwait(false);
+            }
+
+            #endregion
+
+            #region query keys
+
+            /// <summary>
+            /// query keys
+            /// </summary>
+            /// <param name="server">server</param>
+            /// <param name="command">command</param>
+            /// <returns>get keys response</returns>
+            public static async Task<CacheCommandResult<GetKeysResponse>> GetKeysAsync(CacheServer server, GetKeysCommand command)
+            {
+                return await command.ExecuteAsync(server).ConfigureAwait(false);
+            }
+
+            #endregion
+
+            #region clear data
+
+            /// <summary>
+            /// clear database data
+            /// </summary>
+            /// <param name="server">server</param>
+            /// <param name="command">command</param>
+            /// <returns>clear data response</returns>
+            public static async Task<CacheCommandResult<ClearDataResponse>> ClearDataAsync(CacheServer server, ClearDataCommand command)
+            {
+                return await command.ExecuteAsync(server).ConfigureAwait(false);
+            }
+
+            #endregion
+
+            #region get cache item detail
+
+            /// <summary>
+            /// get cache item detail
+            /// </summary>
+            /// <param name="server">server</param>
+            /// <param name="command">command</param>
+            /// <returns>get key detail response</returns>
+            public static async Task<CacheCommandResult<GetKeyDetailResponse>> GetKeyDetailAsync(CacheServer server, GetKeyDetailCommand command)
+            {
+                return await command.ExecuteAsync(server).ConfigureAwait(false);
+            }
+
+            #endregion
+
+            #region get server config
+
+            /// <summary>
+            /// get server config
+            /// </summary>
+            /// <param name="server">server</param>
+            /// <param name="command">command</param>
+            /// <returns>get server config response</returns>
+            public static async Task<CacheCommandResult<GetServerConfigResponse>> GetServerConfigAsync(CacheServer server, GetServerConfigCommand command)
+            {
+                return await command.ExecuteAsync(server).ConfigureAwait(false);
+            }
+
+            #endregion
+
+            #region save server config
+
+            /// <summary>
+            /// save server config
+            /// </summary>
+            /// <param name="command">command</param>
+            /// <returns>save server config response</returns>
+            public static async Task<CacheCommandResult<SaveServerConfigResponse>> SaveServerConfigAsync(CacheServer server, SaveServerConfigCommand command)
+            {
+                return await command.ExecuteAsync(server).ConfigureAwait(false);
+            }
+
+            #endregion
+        }
+
+        #endregion
+
+        #region config
+
+        /// <summary>
+        /// cache config
+        /// </summary>
+        public static class Config
+        {
+            /// <summary>
+            /// cache providers
+            /// </summary>
+            public static Dictionary<CacheServerType, ICacheProvider> Providers = new Dictionary<CacheServerType, ICacheProvider>();
+
+            /// <summary>
+            /// command cache server factory
+            /// </summary>
+            public static Func<ICacheCommand, List<CacheServer>> RequestCacheServerFactory;
+
+            /// <summary>
+            /// get command cache servers
+            /// </summary>
+            /// <param name="cacheCommand">cache command</param>
+            /// <returns></returns>
+            public static List<CacheServer> GetRequestCacheServers<T>(CacheCommand<T> cacheCommand) where T : CacheResponse
+            {
+                return RequestCacheServerFactory?.Invoke(cacheCommand) ?? new List<CacheServer>(0);
+            }
+
+            /// <summary>
+            /// get cache provider
+            /// </summary>
+            /// <param name="serverType">server type</param>
+            /// <returns></returns>
+            public static ICacheProvider GetCacheProvider(CacheServerType serverType)
+            {
+                Providers.TryGetValue(serverType, out var provider);
+                return provider;
+            }
+
+            /// <summary>
+            /// key name splitter
+            /// </summary>
+            public static string KeyNameSplitter = ":";
+
+            /// <summary>
+            /// name value splitter
+            /// </summary>
+            public static string NameValueSplitter = "$";
+
+            /// <summary>
+            /// set global cache key prefix
+            /// </summary>
+            public static Func<List<string>> SetGlobalCacheKeyPrefix;
+
+            /// <summary>
+            /// set cache object key prefix
+            /// </summary>
+            public static Func<CacheObject, List<string>> SetCacheObjectKeyPrefix = o =>
+              {
+                  string objectName = o?.ObjectName;
+                  if (!objectName.IsNullOrEmpty())
+                  {
+                      return new List<string>() { objectName };
+                  }
+                  return new List<string>(0);
+              };
         }
 
         #endregion

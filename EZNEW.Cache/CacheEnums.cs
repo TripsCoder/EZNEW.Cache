@@ -163,4 +163,11 @@ namespace EZNEW.Cache
         Copy = 1,
         Replace = 2
     }
+
+    public enum KeyPatternType
+    {
+        Include = 2,
+        StartWith = 4,
+        EndWith = 8
+    }
 }

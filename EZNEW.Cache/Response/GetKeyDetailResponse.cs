@@ -11,7 +11,7 @@ namespace EZNEW.Cache.Response
         /// <summary>
         /// key detail
         /// </summary>
-        public KeyItem KeyDetail
+        public CacheDataItem KeyDetail
         {
             get;set;
         }

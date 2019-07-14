@@ -8,8 +8,8 @@ namespace EZNEW.Cache
 {
     public class CacheQuery
     {
-        protected int _page = 1;//Page Index
-        protected int _pageSize = 20;//Page Size
+        protected int page = 1;//Page Index
+        protected int pageSize = 20;//Page Size
 
         /// <summary>
         /// Page Index
@@ -18,15 +18,15 @@ namespace EZNEW.Cache
         {
             get
             {
-                if (_page <= 0)
+                if (page <= 0)
                 {
-                    _page = 1;
+                    page = 1;
                 }
-                return _page;
+                return page;
             }
             set
             {
-                _page = value;
+                page = value;
             }
         }
 
@@ -37,15 +37,15 @@ namespace EZNEW.Cache
         {
             get
             {
-                if (_pageSize <= 0)
+                if (pageSize <= 0)
                 {
-                    _pageSize = 20;
+                    pageSize = 20;
                 }
-                return _pageSize;
+                return pageSize;
             }
             set
             {
-                _pageSize = value;
+                pageSize = value;
             }
         }
     }

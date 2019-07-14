@@ -9,12 +9,20 @@ namespace EZNEW.Cache
     /// <summary>
     /// cache key query
     /// </summary>
-    public class KeyQuery: CacheQuery
+    public class KeyQuery : CacheQuery
     {
         /// <summary>
         /// mate key
         /// </summary>
         public string MateKey
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// key pattern type
+        /// </summary>
+        public KeyPatternType Type
         {
             get;set;
         }

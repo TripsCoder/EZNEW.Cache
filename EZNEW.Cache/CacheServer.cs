@@ -11,10 +11,10 @@ namespace EZNEW.Cache
     /// </summary>
     public class CacheServer
     {
-        SortedDictionary<string, dynamic> _serverConfig = new SortedDictionary<string, dynamic>();
-        CacheServerType _serverType;
-        bool _initKey = false;
-        string _key = string.Empty;
+        SortedDictionary<string, dynamic> serverConfig = new SortedDictionary<string, dynamic>();
+        CacheServerType serverType;
+        bool initKey = false;
+        string key = string.Empty;
 
         #region propertys
 
@@ -25,12 +25,12 @@ namespace EZNEW.Cache
         {
             get
             {
-                return _serverType;
+                return serverType;
             }
             set
             {
                 RemoveKey();
-                _serverType = value;
+                serverType = value;
             }
         }
 
@@ -257,13 +257,13 @@ namespace EZNEW.Cache
         void SetConfigValue<T>(string name, T value)
         {
             RemoveKey();
-            if (_serverConfig.ContainsKey(name))
+            if (serverConfig.ContainsKey(name))
             {
-                _serverConfig[name] = value;
+                serverConfig[name] = value;
             }
             else
             {
-                _serverConfig.Add(name, value);
+                serverConfig.Add(name, value);
             }
         }
 
@@ -274,11 +274,11 @@ namespace EZNEW.Cache
         /// <returns></returns>
         T GetConfigValue<T>(string name)
         {
-            if (string.IsNullOrWhiteSpace(name) || !_serverConfig.ContainsKey(name))
+            if (string.IsNullOrWhiteSpace(name) || !serverConfig.ContainsKey(name))
             {
                 return default(T);
             }
-            return _serverConfig[name];
+            return serverConfig[name];
         }
 
         /// <summary>
@@ -287,22 +287,22 @@ namespace EZNEW.Cache
         /// <returns></returns>
         string GetServerKey()
         {
-            if (_initKey)
+            if (initKey)
             {
-                return _key;
+                return key;
             }
-            if (_serverConfig == null)
+            if (serverConfig == null)
             {
                 return string.Empty;
             }
             List<string> valueItems = new List<string>();
-            foreach (var configItem in _serverConfig)
+            foreach (var configItem in serverConfig)
             {
                 valueItems.Add(string.Format("{0}_{1}", configItem.Key, configItem.Value));
             }
-            _key = string.Join(",", valueItems);
-            _initKey = true;
-            return _key;
+            key = string.Join(",", valueItems);
+            initKey = true;
+            return key;
         }
 
         /// <summary>
@@ -310,8 +310,8 @@ namespace EZNEW.Cache
         /// </summary>
         void RemoveKey()
         {
-            _initKey = false;
-            _key = string.Empty;
+            initKey = false;
+            key = string.Empty;
         }
 
         public override bool Equals(object obj)

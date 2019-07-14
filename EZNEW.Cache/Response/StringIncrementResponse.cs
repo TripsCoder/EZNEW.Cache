@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace EZNEW.Cache.Response
 {
-    public class StringIncrementResponse<T>:CacheResponse
+    public class StringIncrementResponse<T> : CacheResponse
     {
         /// <summary>
         /// new value
         /// </summary>
         public T NewValue
         {
-            get;set;
+            get; set;
         }
     }
 }
