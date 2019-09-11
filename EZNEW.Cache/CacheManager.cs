@@ -269,7 +269,7 @@ namespace EZNEW.Cache
                 try
                 {
                     var data = JsonSerialize.JsonToObject<T>(val);
-                    if(data==null)
+                    if (data == null)
                     {
                         continue;
                     }

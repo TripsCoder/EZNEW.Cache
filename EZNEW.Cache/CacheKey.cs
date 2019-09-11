@@ -18,6 +18,20 @@ namespace EZNEW.Cache
             GlobalPrefixs = CacheManager.Config.SetGlobalCacheKeyPrefix?.Invoke();
         }
 
+        public CacheKey(params CacheKey[] previousKeys)
+        {
+            if (!previousKeys.IsNullOrEmpty())
+            {
+                foreach (var prevKey in previousKeys)
+                {
+                    foreach (var prevKeyItem in prevKey.nameValues)
+                    {
+                        AddName(prevKeyItem.Key, prevKeyItem.Value);
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// key values
         /// </summary>
